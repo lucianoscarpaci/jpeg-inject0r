@@ -1,4 +1,11 @@
 def find_magic_number(file_path)
+  if File.exist?(file_path)
+    puts "File '#{file_path}' found and being read."
+  else
+    puts "File '#{file_path}' not found."
+    return
+  end
+  
   magic_number = "FFD8FF" # Hex representation of the magic number
   magic_number_bin = [magic_number].pack('H*') # Convert hex to binary
 
