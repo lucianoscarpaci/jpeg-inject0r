@@ -27,5 +27,5 @@ def inject_code(file_path, code)
 end
 
 file_path = './tester.jpg'
-code = 'spend outside coin quarter drink provide water stove spare device novel sweet'
+code = 'ZTg0Y2RhNGIzYmU3NDQ2NmU3YzQ3MWU5OGE1YWMwYjZiOTczMmRhMDEyMjZlNGU0M2RjNzNhN2YwNGU5MTIzNDkyYWIwOTIzZjI4YjhjYjljZTE0NWM1ZmQyOTcyYjJiODQ0YmFjNDdlNWMxMDAzZjg0YmMxNGUzYTRkMjk2ZTIwZWE4MzljZDI5MDI2Nzc4ZDI3Y2U3YjZiMDhhMDA5Mg=='
 inject_code(file_path, code)
