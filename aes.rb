@@ -13,17 +13,6 @@ end
 key = duplicate_and_cut(original_key, desired_length)
 iv = OpenSSL::Cipher.new('AES-256-CBC').random_iv
 
-def pad_encoded(encoded)
-  encoded += '==' unless encoded.end_with?('==')
-  encoded
-end
-
-def unpad_decoded(decoded)
-  decoded = decoded.chomp('=')
-  decoded += '=' unless decoded.end_with?('==')
-  decoded
-end
-
 def encrypt(plaintext, key, iv)
   cipher = OpenSSL::Cipher.new('AES-256-CBC')
   cipher.encrypt
@@ -32,16 +21,15 @@ def encrypt(plaintext, key, iv)
   encrypted = cipher.update(plaintext) + cipher.final
   encrypted.unpack1('H*')
   encoded = Base64.strict_encode64(encrypted)
-  encoded = pad_encoded(encoded)
 end
 
 def decrypt(ciphertext, key, iv)
- cipher = OpenSSL::Cipher.new('AES-256-CBC')
- cipher.decrypt
- cipher.key = key
- cipher.iv = iv
- decoded = Base64.strict_decode64(unpad_decoded(ciphertext))
- decrypted = cipher.update(decoded) + cipher.final
+  cipher = OpenSSL::Cipher.new('AES-256-CBC')
+  cipher.decrypt
+  cipher.key = key
+  cipher.iv = iv
+  decoded = Base64.strict_decode64(ciphertext)
+  decrypted = cipher.update(decoded) + cipher.final
 end
 
 print 'New message: '
