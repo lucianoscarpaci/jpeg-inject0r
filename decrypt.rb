@@ -14,18 +14,12 @@ end
 key = duplicate_and_cut(original_key, desired_length)
 iv = OpenSSL::Cipher.new('AES-256-CBC').random_iv
 
-def unpad_decoded(decoded)
-  decoded = decoded.chomp('=')
-  decoded += '=' unless decoded.end_with?('==')
-  decoded
-end
-
 def decrypt(ciphertext, key, iv)
   cipher = OpenSSL::Cipher.new('AES-256-CBC')
   cipher.decrypt
   cipher.key = key
   cipher.iv = iv
-  decoded = Base64.strict_decode64(unpad_decoded(ciphertext))
+  decoded = Base64.strict_decode64(ciphertext)
   decrypted = cipher.update(decoded) + cipher.final
 end
 
@@ -51,15 +45,17 @@ def find_the_secret(file_path, key, iv)
 
       file.seek(index + magic_number_bin.bytesize)
       code = file.read
-
-      match = binary_data[index..].match(/[A-Za-z0-9+\/]+(?===)/)
+      # old match pattern
+      # add more = signs to match the pattern
+      match = binary_data[index..].match(/[A-Za-z0-9+\/]+(?=)/)
+      # invalid match pattern
+      #match = binary_data[index..].match(/[A-Za-z0-9+\/]{4}*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?/) 
       if match.nil?
         puts 'Pattern not found after the magic number.'
       else
         matched_string = match[0]
         puts 'Pattern found after the magic number.'
         ciphertext = matched_string
-        ciphertext += '=='
         puts "Ciphertext: #{ciphertext}"
         decrypted_text = decrypt(ciphertext, key, iv)
         puts "Decrypted Text: #{decrypted_text}"

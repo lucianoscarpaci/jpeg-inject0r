@@ -14,11 +14,6 @@ end
 key = duplicate_and_cut(original_key, desired_length)
 iv = OpenSSL::Cipher.new('AES-256-CBC').random_iv
 
-def pad_encoded(encoded)
-  encoded += '==' unless encoded.end_with?('==')
-  encoded
-end
-
 def encrypt(plaintext, key, iv)
   cipher = OpenSSL::Cipher.new('AES-256-CBC')
   cipher.encrypt
@@ -27,7 +22,6 @@ def encrypt(plaintext, key, iv)
   encrypted = cipher.update(plaintext) + cipher.final
   encrypted.unpack1('H*')
   encoded = Base64.strict_encode64(encrypted)
-  encoded = pad_encoded(encoded)
 end
 
 def inject_code(file_path, ciphertext)
@@ -51,6 +45,7 @@ def inject_code(file_path, ciphertext)
       puts "Magic number found at index #{index} in the file."
 
       file.seek(index + magic_number_bin.bytesize)
+      # test add @@ at the end of the ciphertext
       file.write(ciphertext)
 
       puts('Code injected successfully.')
