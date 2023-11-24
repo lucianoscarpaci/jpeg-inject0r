@@ -14,17 +14,13 @@ key = duplicate_and_cut(original_key, desired_length)
 iv = OpenSSL::Cipher.new('AES-256-CBC').random_iv
 
 def pad_encoded(encoded)
-  if encoded[-1] == '='
-    encoded += '=' unless encoded[-2] == '='
-  else
-    encoded += '=='
-  end
+  encoded += '==' unless encoded.end_with?('==')
   encoded
 end
 
 def unpad_decoded(decoded)
   decoded = decoded.chomp('=')
-  decoded = decoded.chomp('=') unless decoded[-1] == '='
+  decoded += '=' unless decoded.end_with?('==')
   decoded
 end
 
