@@ -47,7 +47,7 @@ def find_the_secret(file_path, key, iv)
       code = file.read
       # old match pattern
       # add more = signs to match the pattern
-      match = binary_data[index..].match(/[A-Za-z0-9+\/]+(?=)/)
+      match = binary_data[index..].match(/[A-Za-z0-9+\/]+(?==)/)
       # invalid match pattern
       #match = binary_data[index..].match(/[A-Za-z0-9+\/]{4}*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?/) 
       if match.nil?
@@ -56,6 +56,7 @@ def find_the_secret(file_path, key, iv)
         matched_string = match[0]
         puts 'Pattern found after the magic number.'
         ciphertext = matched_string
+        ciphertext += '='
         puts "Ciphertext: #{ciphertext}"
         decrypted_text = decrypt(ciphertext, key, iv)
         puts "Decrypted Text: #{decrypted_text}"

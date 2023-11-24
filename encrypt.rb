@@ -47,7 +47,7 @@ def inject_code(file_path, ciphertext)
       file.seek(index + magic_number_bin.bytesize)
       # test add @@ at the end of the ciphertext
       file.write(ciphertext)
-
+      puts "Ciphertext: #{ciphertext}"
       puts('Code injected successfully.')
     end
   end
