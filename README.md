@@ -1,4 +1,5 @@
 # jpeg-inject0r
 
-# Usage
-```ruby x.rb```
+## Description
+This tool allows you to inject a payload into a jpeg file.
+It has AES 256-bit encryption and a custom header.
