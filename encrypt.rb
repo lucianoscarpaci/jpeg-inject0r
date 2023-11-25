@@ -22,6 +22,12 @@ def encrypt(plaintext, key, iv)
   encrypted = cipher.update(plaintext) + cipher.final
   encrypted.unpack1('H*')
   encoded = Base64.strict_encode64(encrypted)
+  until encoded.end_with?('=') && !encoded.end_with?('==')
+    plaintext.prepend('\x00')
+    encrypted = cipher.update(plaintext) + cipher.final
+    encoded = Base64.strict_encode64(encrypted)
+  end
+  encoded
 end
 
 def inject_code(file_path, ciphertext)
@@ -55,6 +61,7 @@ end
 
 print 'New message: '
 plaintext = gets.chomp
+plaintext = "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" + plaintext
 ciphertext = encrypt(plaintext, key, iv)
 # Encryption
 inject_code(file_path, ciphertext)
